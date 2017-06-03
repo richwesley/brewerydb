@@ -3,15 +3,17 @@
 var express = require('express');
 var app = express();
 const http = require('http');
+const brewdb = require('./brewerydb');
 const port = 3000;
-const requestHandler = (request, response) => {  
-  console.log(request.url);
-  response.end('Hello Node.js Server!');
+const requestHandler = (request, response) => {
+  brewdb.searchAll('dogfish', function (err, body) {
+    response.end(JSON.stringify(body, null, 2));
+  })
 };
 
 const server = http.createServer(requestHandler);
 
-server.listen(port, (err) => {  
+server.listen(port, (err) => {
   if (err) {
     return console.log('something bad happened', err);
   }
@@ -29,7 +31,7 @@ Data = function() {
    // var styleCache = {};
    // var categoryCache = {};
 	var BreweryDb = require('brewerydb-node');
-	var brewdb = new BreweryDb('ff5080447195a85b7b0b9ed7b50e6b9af');
+	var brewdb = new BreweryDb('ff5080447195a85b7b0b9ed7b50e6b9a');
 
     function init(options) {
 
@@ -93,7 +95,7 @@ function getBreweries(lat, lng, radius, search, callback) {
 //                    $.each(el.locations, function(index, loc) {
 //
 //                        loc.brewery = el;
-//                        
+//
 //                        loc.breweryId = loc.brewery.id;
 //
 //                        delete loc.brewery.locations;
@@ -149,7 +151,7 @@ function searchBreweries(query, callback) {
             }
         );
     }
-	
+
 //	function getBeerData(breweryId, beerId) {
 //        return beerCache[breweryId][beerId];
 //    }
@@ -168,5 +170,5 @@ function searchBreweries(query, callback) {
     //    getBreweryData: getBreweryData,
     //    getMapRoute: getMapRoute
     };
-	
+
 }();
